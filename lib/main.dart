@@ -52,7 +52,7 @@ class FormularioTransferencia extends StatelessWidget {
     double valor = double.tryParse(_campoValorController.text);
     Transferencia transferenciaCriada = Transferencia(valor, numeroConta);
     debugPrint("$transferenciaCriada");
-    Navigator.pop(context,transferenciaCriada);
+    Navigator.pop(context, transferenciaCriada);
   }
 }
 
@@ -85,41 +85,44 @@ class Editor extends StatelessWidget {
   }
 }
 
-class ListaTransferencia extends StatelessWidget {
+class ListaTransferencia extends StatefulWidget {
 
   final List<Transferencia> _transferencias = List();
 
   @override
-  Widget build(BuildContext context) {
-    _transferencias.add(Transferencia(1111.99, 99999));
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Transferencia"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)
-          {
-            return FormularioTransferencia();
-          })).then((tranferenciaRecebida) {
-            debugPrint("Chegou no then future");
-            debugPrint("$tranferenciaRecebida");
-            _transferencias.add(tranferenciaRecebida);
-          });
-        },
-      ),
-      body:ListView.builder(
-        itemCount: _transferencias.length,
-        itemBuilder: (context, indice) {
-        final  transferencia = _transferencias[indice];
-        return ItemTransferencia(transferencia);
-      },)
-
-
-
-    );
+  State<StatefulWidget> createState() {
+    return ListaTransferenciaState();
   }
+}
+
+class ListaTransferenciaState extends State<ListaTransferencia> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Transferencia"),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return FormularioTransferencia();
+            })).then((tranferenciaRecebida) {
+              debugPrint("Chegou no then future");
+              debugPrint("$tranferenciaRecebida");
+              widget._transferencias.add(tranferenciaRecebida);
+            });
+          },
+        ),
+        body: ListView.builder(
+          itemCount: widget._transferencias.length,
+          itemBuilder: (context, indice) {
+            final transferencia = widget._transferencias[indice];
+            return ItemTransferencia(transferencia);
+          },)
+    );;
+  }
+
 }
 
 class ItemTransferencia extends StatelessWidget {
