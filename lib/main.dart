@@ -86,8 +86,12 @@ class Editor extends StatelessWidget {
 }
 
 class ListaTransferencia extends StatelessWidget {
+
+  final List<Transferencia> _transferencias = List();
+
   @override
   Widget build(BuildContext context) {
+    _transferencias.add(Transferencia(1111.99, 99999));
     return Scaffold(
       appBar: AppBar(
         title: Text("Transferencia"),
@@ -101,17 +105,19 @@ class ListaTransferencia extends StatelessWidget {
           })).then((tranferenciaRecebida) {
             debugPrint("Chegou no then future");
             debugPrint("$tranferenciaRecebida");
+            _transferencias.add(tranferenciaRecebida);
           });
         },
       ),
-      body: Column(
-        children: <Widget>[
-          ItemTransferencia(Transferencia(100.0, 1000)),
-          ItemTransferencia(Transferencia(350.0, 18850)),
-          ItemTransferencia(Transferencia(188.0, 5255)),
-          ItemTransferencia(Transferencia(188.0, 5255)),
-        ],
-      ),
+      body:ListView.builder(
+        itemCount: _transferencias.length,
+        itemBuilder: (context, indice) {
+        final  transferencia = _transferencias[indice];
+        return ItemTransferencia(transferencia);
+      },)
+
+
+
     );
   }
 }
@@ -140,7 +146,6 @@ class Transferencia {
 
   @override
   String toString() {
-    // TODO: implement toString
     return 'Transferencia{valor: $valor, numeroConta: $numeroConta}';
   }
 }
